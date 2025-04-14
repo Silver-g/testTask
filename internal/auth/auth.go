@@ -9,7 +9,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-// Структура для хранения данных пользователя, который авторизован
+// Структура для хранения данных пользователя который авторизован
 type Claims struct {
 	UserID int `json:"user_id"`
 	jwt.RegisteredClaims
@@ -25,7 +25,7 @@ func GenerateToken(userID int) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	secret := []byte(os.Getenv("JWT_SECRET_KEY")) // Берем секрет из переменной окружения
+	secret := []byte(os.Getenv("JWT_SECRET_KEY"))
 	tokenString, err := token.SignedString(secret)
 	if err != nil {
 		return "", fmt.Errorf("ошибка при генерации токена: %w", err)
@@ -34,10 +34,9 @@ func GenerateToken(userID int) (string, error) {
 	return tokenString, nil
 }
 
-// Парсинг и валидация JWT токена
 func ParseToken(tokenString string) (int, error) {
 	claims := &Claims{}
-	secret := []byte(os.Getenv("JWT_SECRET_KEY")) // Берем секрет из переменной окружения
+	secret := []byte(os.Getenv("JWT_SECRET_KEY"))
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return secret, nil

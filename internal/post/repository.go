@@ -48,7 +48,7 @@ func (r *PostRepository) GetAllPosts() ([]Post, error) {
 	return posts, nil
 }
 
-// Новый метод для создания комментария
+// метод для создания комментария
 func (r *PostRepository) CreateComment(userID int, postID, content string, parentID *int) (int, error) {
 	var commentID int
 	query := `

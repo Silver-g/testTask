@@ -110,7 +110,6 @@ func (h *PostHandler) CreateComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Получение ID поста из параметров URL
 	postID := r.URL.Query().Get("post_id")
 	if postID == "" {
 		http.Error(w, "Не указан post_id", http.StatusBadRequest)
