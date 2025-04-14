@@ -66,3 +66,20 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(post)
 }
+func (h *PostHandler) GetAllPosts(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+		return
+	}
+
+	posts, err := h.Repo.GetAllPosts()
+	if err != nil {
+		http.Error(w, "Ошибка при получении постов", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(posts); err != nil {
+		http.Error(w, "Ошибка при кодировании ответа", http.StatusInternalServerError)
+	}
+}

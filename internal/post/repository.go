@@ -22,3 +22,28 @@ func (r *PostRepository) CreatePost(userID int, title, content string, commentsE
 	}
 	return postID, nil
 }
+
+// Получение всех постов
+func (r *PostRepository) GetAllPosts() ([]Post, error) {
+	var posts []Post
+	query := `SELECT id, user_id, title, content, comments_enabled FROM posts`
+	rows, err := r.DB.Query(query)
+	if err != nil {
+		return nil, fmt.Errorf("ошибка при получении постов: %w", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var post Post
+		if err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.CommentsEnabled); err != nil {
+			return nil, fmt.Errorf("ошибка при чтении постов: %w", err)
+		}
+		posts = append(posts, post)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("ошибка при чтении данных: %w", err)
+	}
+
+	return posts, nil
+}

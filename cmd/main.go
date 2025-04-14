@@ -26,10 +26,11 @@ func main() {
 
 	http.HandleFunc("/register", userHandler.RegisterUser)
 	http.HandleFunc("/login", userHandler.Login)
-	//
+
 	postRepo := post.NewPostRepository(db)
 	postHandler := &post.PostHandler{Repo: postRepo}
-	http.HandleFunc("/posts", postHandler.CreatePost)
+	http.HandleFunc("/posts", postHandler.CreatePost)       // Создание поста
+	http.HandleFunc("/posts/list", postHandler.GetAllPosts) // Получение всех постов
 
 	// Запуск HTTP-сервера
 	fmt.Println("Сервер запущен на :8080")
