@@ -47,3 +47,18 @@ func (r *PostRepository) GetAllPosts() ([]Post, error) {
 
 	return posts, nil
 }
+
+// Новый метод для создания комментария
+func (r *PostRepository) CreateComment(userID int, postID, content string, parentID *int) (int, error) {
+	var commentID int
+	query := `
+		INSERT INTO comments (user_id, post_id, content, parent_id) 
+		VALUES ($1, $2, $3, $4) 
+		RETURNING id
+	`
+	err := r.DB.QueryRow(query, userID, postID, content, parentID).Scan(&commentID)
+	if err != nil {
+		return 0, fmt.Errorf("ошибка при создании комментария: %w", err)
+	}
+	return commentID, nil
+}

@@ -31,6 +31,7 @@ func main() {
 	postHandler := &post.PostHandler{Repo: postRepo}
 	http.HandleFunc("/posts", postHandler.CreatePost)       // Создание поста
 	http.HandleFunc("/posts/list", postHandler.GetAllPosts) // Получение всех постов
+	http.HandleFunc("/comment", postHandler.CreateComment)  // Добавим маршрут для создания комментариев
 
 	// Запуск HTTP-сервера
 	fmt.Println("Сервер запущен на :8080")
