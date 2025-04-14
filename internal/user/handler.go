@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"testTask/internal/auth" // добавляем импорт пакета auth
 )
 
 type UserHandler struct {
@@ -55,7 +56,7 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := GenerateJWT(user.ID)
+	token, err := auth.GenerateToken(user.ID) // используем функцию из пакета auth
 	if err != nil {
 		http.Error(w, "Ошибка генерации токена", http.StatusInternalServerError)
 		return

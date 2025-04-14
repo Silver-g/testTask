@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"testTask/internal/db"
+	"testTask/internal/post"
 	"testTask/internal/user"
 
 	"github.com/joho/godotenv"
@@ -27,6 +28,10 @@ func main() {
 	// Регистрируем хэндлеры
 	http.HandleFunc("/register", userHandler.RegisterUser)
 	http.HandleFunc("/login", userHandler.Login)
+	//
+	postRepo := post.NewPostRepository(db)
+	postHandler := &post.PostHandler{Repo: postRepo}
+	http.HandleFunc("/posts", postHandler.CreatePost)
 
 	// Запуск HTTP-сервера
 	fmt.Println("Сервер запущен на :8080")
