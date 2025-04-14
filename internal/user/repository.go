@@ -2,34 +2,35 @@ package user
 
 import (
 	"database/sql"
+	"fmt"
 )
 
-type Repository interface {
-	CreateUser(user *User) error
-	GetUserByUsername(username string) (*User, error)
+type UserRepository struct {
+	DB *sql.DB
 }
 
-type repo struct {
-	db *sql.DB
-}
-
-func NewRepository(db *sql.DB) Repository {
-	return &repo{db: db}
-}
-
-func (r *repo) CreateUser(user *User) error {
-	query := "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id"
-	return r.db.QueryRow(query, user.Username, user.Password).Scan(&user.ID)
-}
-
-func (r *repo) GetUserByUsername(username string) (*User, error) {
-	query := "SELECT id, username, password FROM users WHERE username = $1"
-	row := r.db.QueryRow(query, username)
-
-	var user User
-	err := row.Scan(&user.ID, &user.Username, &user.Password)
+// Создание пользователя в базе данных
+func (r *UserRepository) CreateUser(username, password string) (int, error) {
+	var userID int
+	query := `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id`
+	err := r.DB.QueryRow(query, username, password).Scan(&userID)
 	if err != nil {
-		return nil, err
+		return 0, fmt.Errorf("ошибка при создании пользователя: %w", err)
+	}
+	return userID, nil
+}
+
+// Получение пользователя по ID
+func (r *UserRepository) GetUserByID(userID int) (*User, error) {
+	var user User
+	query := `SELECT id, username, password FROM users WHERE id = $1`
+	err := r.DB.QueryRow(query, userID).Scan(&user.ID, &user.Username, &user.Password)
+	if err != nil {
+		return nil, fmt.Errorf("ошибка при получении пользователя: %w", err)
 	}
 	return &user, nil
+}
+
+func NewUserRepository(db *sql.DB) *UserRepository {
+	return &UserRepository{DB: db}
 }
