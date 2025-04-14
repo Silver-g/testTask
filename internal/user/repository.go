@@ -34,3 +34,12 @@ func (r *UserRepository) GetUserByID(userID int) (*User, error) {
 func NewUserRepository(db *sql.DB) *UserRepository {
 	return &UserRepository{DB: db}
 }
+func (r *UserRepository) GetUserByCredentials(username, password string) (*User, error) {
+	var user User
+	query := `SELECT id, username, password FROM users WHERE username = $1 AND password = $2`
+	err := r.DB.QueryRow(query, username, password).Scan(&user.ID, &user.Username, &user.Password)
+	if err != nil {
+		return nil, fmt.Errorf("неверное имя пользователя или пароль: %w", err)
+	}
+	return &user, nil
+}

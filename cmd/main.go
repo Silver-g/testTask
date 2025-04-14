@@ -26,6 +26,7 @@ func main() {
 
 	// Регистрируем хэндлеры
 	http.HandleFunc("/register", userHandler.RegisterUser)
+	http.HandleFunc("/login", userHandler.Login)
 
 	// Запуск HTTP-сервера
 	fmt.Println("Сервер запущен на :8080")
