@@ -21,11 +21,9 @@ func main() {
 		log.Fatal("Не удалось подключиться к базе:", err)
 	}
 
-	// Создание репозитория и хэндлера для пользователей
 	userRepo := user.NewUserRepository(db)
 	userHandler := &user.UserHandler{Repo: userRepo}
 
-	// Регистрируем хэндлеры
 	http.HandleFunc("/register", userHandler.RegisterUser)
 	http.HandleFunc("/login", userHandler.Login)
 	//
