@@ -6,9 +6,14 @@ import (
 	"net/http"
 	"testTask/internal/db"
 	"testTask/internal/user"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Println("Не удалось загрузить .env файл, используем переменные окружения из системы")
+	}
 	// Подключение к базе данных
 	db, err := db.Connect()
 	if err != nil {
