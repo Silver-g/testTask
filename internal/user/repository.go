@@ -9,7 +9,6 @@ type UserRepository struct {
 	DB *sql.DB
 }
 
-// Создание пользователя в базе данных
 func (r *UserRepository) CreateUser(username, password string) (int, error) {
 	var userID int
 	query := `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id`
@@ -20,7 +19,6 @@ func (r *UserRepository) CreateUser(username, password string) (int, error) {
 	return userID, nil
 }
 
-// Получение пользователя по ID
 func (r *UserRepository) GetUserByID(userID int) (*User, error) {
 	var user User
 	query := `SELECT id, username, password FROM users WHERE id = $1`

@@ -23,11 +23,17 @@ func (r *PostRepository) CreatePost(userID int, title, content string, commentsE
 	return postID, nil
 }
 
-// Получение всех постов
-func (r *PostRepository) GetAllPosts() ([]Post, error) {
+func (r *PostRepository) GetAllPosts(limit, offset int) ([]Post, error) {
 	var posts []Post
-	query := `SELECT id, user_id, title, content, comments_enabled FROM posts`
-	rows, err := r.DB.Query(query)
+
+	query := `
+		SELECT id, user_id, title, content, comments_enabled 
+		FROM posts
+		ORDER BY id ASC
+		LIMIT $1 OFFSET $2
+	`
+
+	rows, err := r.DB.Query(query, limit, offset)
 	if err != nil {
 		return nil, fmt.Errorf("ошибка при получении постов: %w", err)
 	}
@@ -48,7 +54,6 @@ func (r *PostRepository) GetAllPosts() ([]Post, error) {
 	return posts, nil
 }
 
-// метод для создания комментария
 func (r *PostRepository) CreateComment(userID int, postID, content string, parentID *int) (int, error) {
 	var commentID int
 	query := `
@@ -61,4 +66,14 @@ func (r *PostRepository) CreateComment(userID int, postID, content string, paren
 		return 0, fmt.Errorf("ошибка при создании комментария: %w", err)
 	}
 	return commentID, nil
+}
+
+func (r *PostRepository) GetCommentsEnabled(postID int) (bool, error) {
+	var commentsEnabled bool
+	query := `SELECT comments_enabled FROM posts WHERE id = $1`
+	err := r.DB.QueryRow(query, postID).Scan(&commentsEnabled)
+	if err != nil {
+		return false, fmt.Errorf("ошибка при получении информации о комментариях: %w", err)
+	}
+	return commentsEnabled, nil
 }
