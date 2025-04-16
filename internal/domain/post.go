@@ -25,7 +25,7 @@ type PostWithUserID struct {
 	UserID int `json:"user_id"`
 }
 
-var Comment struct {
+type Comment struct {
 	Content  string `json:"content"`
 	ParentID *int   `json:"parent_id,omitempty"`
 }
