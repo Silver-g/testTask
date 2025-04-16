@@ -1,5 +1,5 @@
 # testTask
-## Запрос для пагинации:
+### Запрос для пагинации:
 GET http://localhost:8080/posts/list?limit=100&offset=0
 Зпрос для получения всех постов: GET http://localhost:8080/posts/list
 Запрос для регистрации: Post http://localhost:8080/register
