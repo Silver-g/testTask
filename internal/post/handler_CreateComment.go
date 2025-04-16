@@ -5,13 +5,9 @@ import (
 	"net/http"
 	"strconv"
 	"testTask/internal/auth"
+	"testTask/internal/domain"
 	"testTask/pkg/response"
 )
-
-var comment struct {
-	Content  string `json:"content"`
-	ParentID *int   `json:"parent_id,omitempty"`
-}
 
 const PostIDParam = "post_id"
 
@@ -44,12 +40,12 @@ func (h *PostHandler) CreateComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := json.NewDecoder(r.Body).Decode(&comment); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&domain.Comment); err != nil {
 		http.Error(w, response.ErrInvalidJSON, http.StatusBadRequest)
 		return
 	}
 
-	commentID, err := h.Repo.CreateComment(userID, postID, comment.Content, comment.ParentID)
+	commentID, err := h.Repo.CreateComment(userID, postID, domain.Comment.Content, domain.Comment.ParentID)
 	if err != nil {
 		http.Error(w, response.ErrCommentCreationFailed, http.StatusInternalServerError)
 		return
@@ -58,8 +54,8 @@ func (h *PostHandler) CreateComment(w http.ResponseWriter, r *http.Request) {
 	commentResponse := map[string]interface{}{
 		"id":        commentID,
 		"user_id":   userID,
-		"content":   comment.Content,
-		"parent_id": comment.ParentID,
+		"content":   domain.Comment.Content,
+		"parent_id": domain.Comment.ParentID,
 	}
 
 	response.SendJSONResponse(w, http.StatusOK, commentResponse)

@@ -3,6 +3,7 @@ package post
 import (
 	"database/sql"
 	"fmt"
+	"testTask/internal/domain"
 )
 
 type PostRepository struct {
@@ -23,8 +24,8 @@ func (r *PostRepository) CreatePost(userID int, title, content string, commentsE
 	return postID, nil
 }
 
-func (r *PostRepository) GetAllPosts(limit, offset int) ([]Post, error) {
-	var posts []Post
+func (r *PostRepository) GetAllPosts(limit, offset int) ([]domain.Post, error) {
+	var posts []domain.Post
 
 	query := `
 		SELECT id, user_id, title, content, comments_enabled 
@@ -40,7 +41,7 @@ func (r *PostRepository) GetAllPosts(limit, offset int) ([]Post, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var post Post
+		var post domain.Post
 		if err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.CommentsEnabled); err != nil {
 			return nil, fmt.Errorf("ошибка при чтении постов: %w", err)
 		}

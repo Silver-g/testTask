@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const jwtSecretKeyEnv = "JWT_SECRET_KEY"
@@ -57,4 +58,13 @@ func ParseToken(tokenString string) (int, error) {
 	}
 
 	return claims.UserID, nil
+}
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(bytes), err
+}
+
+// Сравнивает хеш из базы с паролем, введённым пользователем
+func CheckPasswordHash(hash, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 }

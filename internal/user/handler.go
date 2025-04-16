@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"testTask/internal/auth"
+	"testTask/internal/domain"
 )
 
 type UserHandler struct {
@@ -17,7 +18,7 @@ func (h *UserHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user User
+	var user domain.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, "Невалидный JSON", http.StatusBadRequest)
 		log.Printf("Ошибка при декодировании JSON: %v", err)
@@ -43,7 +44,7 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var creds User
+	var creds domain.User
 	if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
 		http.Error(w, "Невалидный JSON", http.StatusBadRequest)
 		return
