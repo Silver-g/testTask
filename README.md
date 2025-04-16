@@ -32,6 +32,8 @@ Post http://localhost:8080/register
     "parent_id": 1
 }
 #### UPD Для создания поста, написания комметрия требуется jwt токен который генериуется при входе, его необходимо вставлять в ручную. 
+#### Тесты: go test -v internal/post/post_repository_test.go
+#### go test -v internal/user/user_repository_test.go
 #### Схема бд:
 ──────────────
 │   users    │
